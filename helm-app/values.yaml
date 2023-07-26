@@ -13,7 +13,7 @@ image:
   repository: tpluscontainerregistry.azurecr.io
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "V2"
 
 imagePullSecrets: []
 nameOverride: ""
