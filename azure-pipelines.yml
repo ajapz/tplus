@@ -47,13 +47,13 @@ steps:
 - task: HelmDeploy@0
   displayName: 'helm upgrade'
   inputs:
-    connectionType: Kubernetes Service Connection
+    connectionType: 'Azure Resource Manager'
     azureSubscription: 'Visual Studio Enterprise Subscription (e2452abf-e102-49da-b222-bf041f8faad3)'
     azureResourceGroup: 'tplus-RG'
     kubernetesCluster: 'tplus-helm-aks'
-    command: upgrade
-    chartType: FilePath
+    command: 'upgrade'
+    chartType: 'FilePath'
     chartPath: '$(System.DefaultWorkingDirectory)/_tplus-Docker container-CI/tplus-helm-artifact/nodeapi-*.tgz'
     chartVersion: '$(Build.BuildId)'
-    releaseName: samplehelmapi
+    releaseName: 'samplehelmapi'
     waitForExecution: false
