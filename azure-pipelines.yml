@@ -39,3 +39,17 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
     artifact: 'tplus-helm-artifact'
+
+- task: HelmDeploy@0
+  displayName: 'helm upgrade'
+  inputs:
+    connectionType: '$(Parameters.connectionType)'
+    azureSubscription: '$(Parameters.azureSubscriptionEndpoint)'
+    azureResourceGroup: '$(Parameters.azureResourceGroup)'
+    kubernetesCluster: '$(Parameters.kubernetesCluster)'
+    command: upgrade
+    chartType: FilePath
+    chartPath: '$(System.DefaultWorkingDirectory)/_tplus-Docker container-CI/tplus-helm-artifact/nodeapi-*.tgz'
+    chartVersion: '$(Build.BuildId)'
+    releaseName: samplehelmapi
+    waitForExecution: false
