@@ -1,11 +1,18 @@
 pool:
   name: Azure Pipelines
 steps:
+
 - task: Docker@0
   displayName: 'Build an image'
   inputs:
+    containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'Visual Studio Enterprise Subscription (e2452abf-e102-49da-b222-bf041f8faad3)'
     azureContainerRegistry: '{"loginServer":"tpluscontainerregistry.azurecr.io", "id" : "/subscriptions/e2452abf-e102-49da-b222-bf041f8faad3/resourceGroups/tplus-RG/providers/Microsoft.ContainerRegistry/registries/tplusContainerRegistry"}'
+    action: 'Build an image'
+    dockerFile: '**/Dockerfile'
+    imageName: '$(Build.Repository.Name):$(Build.BuildId)'
+    includeSourceTags: true
+    includeLatestTag: true
 
 - task: Docker@0
   displayName: 'Push an image'
