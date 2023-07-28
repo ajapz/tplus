@@ -33,7 +33,7 @@ steps:
   inputs:
     azureSubscription: 'Visual Studio Enterprise Subscription (e2452abf-e102-49da-b222-bf041f8faad3)'
     azureResourceGroup: 'tplus-RG'
-    kubernetesCluster: 'tplus-aks'
+    kubernetesCluster: 'tplus-helm-aks'
     command: package
     chartPath: 'helm-app'
     chartVersion: '$(Build.BuildId)'
@@ -47,10 +47,10 @@ steps:
 - task: HelmDeploy@0
   displayName: 'helm upgrade'
   inputs:
-    connectionType: '$(Parameters.connectionType)'
-    azureSubscription: '$(Parameters.azureSubscriptionEndpoint)'
-    azureResourceGroup: '$(Parameters.azureResourceGroup)'
-    kubernetesCluster: '$(Parameters.kubernetesCluster)'
+    connectionType: Kubernetes Service Connection
+    azureSubscription: 'Visual Studio Enterprise Subscription (e2452abf-e102-49da-b222-bf041f8faad3)'
+    azureResourceGroup: 'tplus-RG'
+    kubernetesCluster: 'tplus-helm-aks'
     command: upgrade
     chartType: FilePath
     chartPath: '$(System.DefaultWorkingDirectory)/_tplus-Docker container-CI/tplus-helm-artifact/nodeapi-*.tgz'
