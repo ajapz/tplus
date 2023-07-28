@@ -1,3 +1,7 @@
+trigger: none
+
+pr: none
+
 pool:
   name: Azure Pipelines
 steps:
