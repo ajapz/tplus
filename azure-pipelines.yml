@@ -1,30 +1,34 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+pool:
+  name: Azure Pipelines
+steps:
+- task: Docker@0
+  displayName: 'Build an image'
+  inputs:
+    azureSubscription: 'Visual Studio Enterprise Subscription (e2452abf-e102-49da-b222-bf041f8faad3)'
+    azureContainerRegistry: '{"loginServer":"tpluscontainerregistry.azurecr.io", "id" : "/subscriptions/e2452abf-e102-49da-b222-bf041f8faad3/resourceGroups/tplus-RG/providers/Microsoft.ContainerRegistry/registries/tplusContainerRegistry"}'
 
-trigger:
-- main
+- task: Docker@0
+  displayName: 'Push an image'
+  inputs:
+    azureSubscription: 'Visual Studio Enterprise Subscription (e2452abf-e102-49da-b222-bf041f8faad3)'
+    azureContainerRegistry: '{"loginServer":"tpluscontainerregistry.azurecr.io", "id" : "/subscriptions/e2452abf-e102-49da-b222-bf041f8faad3/resourceGroups/tplus-RG/providers/Microsoft.ContainerRegistry/registries/tplusContainerRegistry"}'
+    action: 'Push an image'
 
-resources:
-- repo: self
+- task: HelmInstaller@0
+  displayName: 'Helm install'
 
-variables:
-  tag: '$(Build.BuildId)'
+- task: HelmDeploy@0
+  displayName: 'helm package'
+  inputs:
+    azureSubscription: 'Visual Studio Enterprise Subscription (e2452abf-e102-49da-b222-bf041f8faad3)'
+    azureResourceGroup: 'tplus-RG'
+    kubernetesCluster: 'tplus-aks'
+    command: package
+    chartPath: 'helm-app'
+    chartVersion: '$(Build.BuildId)'
 
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        containerRegistry: $(ContainerRegistry)
-        repository: '$(containerRepo)'
-        command: 'build'
-        Dockerfile: '**/Dockerfile'
-        tags: '$(tag)'
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'tplus-helm-artifact'
